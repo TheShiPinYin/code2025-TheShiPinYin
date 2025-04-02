@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.OrdersMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Orders">
+        select orders.*, supplier.name as supplierName from orders
+        left join supplier on orders.supplier_id = supplier.id
+        <where>
+            <if test="orderNo != null">and order_no like concat('%', #{orderNo}, '%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    <update id="updateById" parameterType="com.example.entity.Orders">
+        update orders
+        <set>
+            <if test="supplierId != null">
+                supplier_id = #{supplierId},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="count != null">
+                count = #{count},
+            </if>
+            <if test="total != null">
+                total = #{total},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
