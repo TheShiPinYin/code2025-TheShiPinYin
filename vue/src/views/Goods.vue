@@ -36,7 +36,7 @@
 
     <el-dialog width="35%" v-model="data.formVisible" title="商品信息" destroy-on-close>
       <el-form :model="data.form" ref="formRef" :rules="rules" label-width="100px" label-position="right" style="padding-right: 40px">
-        <el-form-item label="商品图片" prop="img">
+        <el-form-item label="商品名称" prop="name">
           <el-upload
               class="upload-demo"
               :action="'http://localhost:8080/files/upload'"
