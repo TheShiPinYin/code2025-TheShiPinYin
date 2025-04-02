@@ -9,9 +9,20 @@
         left join supplier on orders.supplier_id = supplier.id
         <where>
             <if test="orderNo != null">and order_no like concat('%', #{orderNo}, '%')</if>
+            <if test="idsArr != null and idsArr.length > 0">
+                and id in
+                <foreach collection="idsArr" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+            </if>
         </where>
         order by id desc
     </select>
+
+    <insert id="insert" parameterType="com.example.entity.Orders">
+        insert into orders (supplier_id, name, count, total, order_no, time)
+        values (#{supplierId}, #{name}, #{count}, #{total}, #{orderNo}, #{time})
+    </insert>
 
     <update id="updateById" parameterType="com.example.entity.Orders">
         update orders
@@ -27,6 +38,12 @@
             </if>
             <if test="total != null">
                 total = #{total},
+            </if>
+            <if test="orderNo != null">
+                order_no = #{orderNo},
+            </if>
+            <if test="time != null">
+                time = #{time},
             </if>
         </set>
         where id = #{id}

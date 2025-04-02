@@ -32,4 +32,10 @@ public class GoodsService {
     public void deleteById(Integer id) {
         goodsMapper.deleteById(id);
     }
+
+    public void deleteBatch(List<Goods> goodsList) {
+        for (Goods goods : goodsList) {
+            goodsMapper.deleteById(goods.getId());
+        }
+    }
 }

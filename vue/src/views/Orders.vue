@@ -1,112 +1,139 @@
 <template>
   <div>
-    <div class="card" style="margin-bottom: 10px;">
-      <el-input prefix-icon="Search" style="width: 300px; margin-right: 10px" v-model="data.orderNo" placeholder="请输入订单编号查询"></el-input>
-      <el-button type="primary" plain round @click="load">查询</el-button>
-      <el-button type="info" plain round style="margin: 0 10px" @click="reset">重置</el-button>
+    <div class="card" style="margin-bottom: 5px">
+      <el-input clearable @clear="load" style="width: 260px; margin-right: 5px" v-model="data.orderNo" placeholder="请输入订单编号查询" :prefix-icon="Search"></el-input>
+      <el-input clearable @clear="load" style="width: 260px; margin-right: 5px" v-model="data.name" placeholder="请输入商品名称查询" :prefix-icon="Search"></el-input>
+      <el-button type="primary" @click="load">查 询</el-button>
+      <el-button @click="reset">重 置</el-button>
     </div>
-    <div class="card" style="margin-bottom: 10px">
-      <div style="margin-bottom: 10px">
-        <el-button type="primary" plain round @click="handleAdd">新增</el-button>
-      </div>
-      <el-table :data="data.tableData" style="width: 100%">
-        <el-table-column prop="id" label="序号" width="70"/>
-        <el-table-column prop="name" label="商品名称"/>
-        <el-table-column prop="count" label="商品数量"/>
-        <el-table-column prop="total" label="订单总价"/>
-        <el-table-column prop="orderNo" label="订单编号"/>
-        <el-table-column prop="supplierName" label="供货商"/>
-        <el-table-column prop="time" label="订单时间"/>
-        <el-table-column label="操作" width="180">
+
+    <div class="card" style="margin-bottom: 5px">
+      <el-button type="primary" @click="handleAdd">新 增</el-button>
+      <el-button type="danger" @click="deleteBatch" :disabled="selectedRows.length === 0">批量删除</el-button>
+      <el-button type="info" @click="exportData">批量导出</el-button>
+      <el-upload
+          style="display: inline-block; margin-left: 10px"
+          action="http://localhost:8080/orders/import"
+          :show-file-list="false"
+          :on-success="handleImportSuccess"
+      >
+        <el-button type="success">批量导入</el-button>
+      </el-upload>
+    </div>
+
+    <div class="card" style="margin-bottom: 5px">
+      <el-table :data="data.tableData" style="width: 100%" @selection-change="handleSelectionChange"
+                :header-cell-style="{ color: '#333', backgroundColor: '#eaf4ff' }">
+        <el-table-column type="selection" width="55" />
+        <el-table-column prop="orderNo" label="订单编号" />
+        <el-table-column prop="name" label="商品名称" />
+        <el-table-column prop="count" label="商品数量" />
+        <el-table-column prop="total" label="订单总价" />
+        <el-table-column prop="supplierName" label="供货商" />
+        <el-table-column prop="time" label="订单时间" />
+        <el-table-column label="操作" width="100">
           <template #default="scope">
-            <el-button type="primary" :icon="Edit" circle @click="handleEdit(scope.row)"></el-button>
-            <el-button type="danger" :icon="Delete" circle @click="dele(scope.row.id)"></el-button>
+            <el-button type="primary" icon="Edit" circle @click="handleEdit(scope.row)"></el-button>
+            <el-button type="danger" icon="Delete" circle @click="del(scope.row.id)"></el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
 
-    <div class="card" v-if="data.total">
-      <el-pagination @current-change="changePage" background layout="prev, pager, next" :page-size="data.pageSize" v-model:current-page="data.pageNum" :total="data.total"/>
+    <div class="card">
+      <el-pagination
+          v-model:current-page="data.pageNum"
+          v-model:page-size="data.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :page-sizes="[5, 10, 20]"
+          :total="data.total"
+          @current-change="load"
+          @size-change="load"
+      />
     </div>
 
-    <el-dialog width="35%" v-model="data.formVisible" title="订单信息" destroy-on-close>
-      <el-form :model="data.form" ref="formRef" :rules="rules" label-width="100px" label-position="right" style="padding-right: 40px">
-        <el-form-item label="商品名称" prop="name">
-          <el-input v-model="data.form.name" autocomplete="off"/>
+    <el-dialog title="订单信息" v-model="data.formVisible" width="30%" destroy-on-close>
+      <el-form ref="formRef" :model="data.form" :rules="data.rules" label-width="80px" style="padding: 20px 30px 10px 0">
+        <el-form-item prop="orderNo" label="订单编号">
+          <el-input v-model="data.form.orderNo" autocomplete="off" placeholder="请输入订单编号"/>
         </el-form-item>
-        <el-form-item label="商品数量" prop="count">
-          <el-input v-model="data.form.count" autocomplete="off"/>
+        <el-form-item prop="name" label="商品名称">
+          <el-input v-model="data.form.name" autocomplete="off" placeholder="请输入商品名称"/>
         </el-form-item>
-        <el-form-item label="订单总价" prop="total">
-          <el-input v-model="data.form.total" autocomplete="off"/>
+        <el-form-item prop="count" label="商品数量">
+          <el-input v-model="data.form.count" autocomplete="off" placeholder="请输入商品数量"/>
         </el-form-item>
-        <el-form-item label="订单时间" prop="time">
-          <el-date-picker style="width: 100%"
-              v-model="data.form.time"
-              type="date"
-              placeholder="请选择日期"
-              value-format="YYYY-MM-DD"
-          />
+        <el-form-item prop="total" label="订单总价">
+          <el-input v-model="data.form.total" autocomplete="off" placeholder="请输入订单总价"/>
         </el-form-item>
-        <el-form-item label="供货商" prop="supplierId">
+        <el-form-item prop="supplierId" label="供货商">
           <el-select v-model="data.form.supplierId" placeholder="请选择供货商" style="width: 100%">
             <el-option v-for="item in data.supplierData" :key="item.id" :label="item.name" :value="item.id"/>
           </el-select>
         </el-form-item>
+        <el-form-item prop="time" label="订单时间">
+          <el-date-picker style="width: 100%"
+                          v-model="data.form.time"
+                          type="date"
+                          placeholder="请选择日期"
+                          value-format="YYYY-MM-DD"
+          />
+        </el-form-item>
       </el-form>
       <template #footer>
-        <span class="dialog-footer">
+        <div class="dialog-footer">
           <el-button @click="data.formVisible = false">取 消</el-button>
           <el-button type="primary" @click="save">保 存</el-button>
-        </span>
+        </div>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-import {reactive, ref} from "vue"
-import request from "@/utils/request";
-import {Delete, Edit} from '@element-plus/icons-vue'
-import {ElMessage, ElMessageBox} from "element-plus";
+import { reactive, ref } from "vue";
+import { Search } from "@element-plus/icons-vue";
+import request from "@/utils/request.js";
+import { ElMessage, ElMessageBox } from "element-plus";
+
 const data = reactive({
-  formVisible: false,
-  form: {},
-  tableData: [],
+  user: JSON.parse(localStorage.getItem('code_user') || '{}'),
+  orderNo: '',
+  name: '',
   pageNum: 1,
   pageSize: 5,
   total: 0,
-  orderNo: null,
+  tableData: [],
+  formVisible: false,
+  form: {},
+  rules: {
+    orderNo: [
+      { required: true, message: '请填写订单编号', trigger: 'blur' }
+    ],
+    name: [
+      { required: true, message: '请填写商品名称', trigger: 'blur' }
+    ],
+    count: [
+      { required: true, message: '请填写商品数量', trigger: 'blur' }
+    ],
+    total: [
+      { required: true, message: '请填写订单总价', trigger: 'blur' }
+    ],
+    supplierId: [
+      { required: true, message: '请选择供货商', trigger: 'blur' }
+    ],
+    time: [
+      { required: true, message: '请选择订单时间', trigger: 'blur' }
+    ]
+  },
+  rows: [],
+  ids: [],
   supplierData: []
-})
-
-const rules = reactive ({
-  name: [
-    { required: true, message: '请输入商品名称', trigger: 'blur' },
-  ],
-  count: [
-    { required: true, message: '请输入商品数量', trigger: 'blur' },
-  ],
-  total: [
-    { required: true, message: '请输入订单价格', trigger: 'blur' },
-  ],
-  supplierId: [
-    { required: true, message: '请选择供货商', trigger: 'blur' },
-  ],
 })
 
 const formRef = ref()
 
-const handleAdd = () => {
-  data.form = {}
-  data.formVisible = true
-}
-
-const handleEdit = (row) => {
-  data.form = JSON.parse(JSON.stringify(row))
-  data.formVisible = true
-}
+const selectedRows = ref([])
 
 const load = () => {
   request.get('/orders/selectPage', {
@@ -114,68 +141,16 @@ const load = () => {
       pageNum: data.pageNum,
       pageSize: data.pageSize,
       orderNo: data.orderNo,
+      name: data.name
     }
   }).then(res => {
     if (res.code === '200') {
-      data.tableData = res.data?.list || []
-      data.total = res.data?.total
-    }
-  })
-}
-
-const update = () => {
-  request.put('/orders/update', data.form).then(res => {
-    if (res.code === '200') {
-      ElMessage.success('更新成功')
-      data.formVisible = false
-      load()
+      data.tableData = res.data.list
+      data.total = res.data.total
     } else {
       ElMessage.error(res.msg)
     }
   })
-}
-
-const add = () => {
-  request.post('/orders/add', data.form).then(res => {
-    if (res.code === '200') {
-      ElMessage.success('新增成功')
-      data.formVisible = false
-      load()
-    } else {
-      ElMessage.error(res.msg)
-    }
-  })
-}
-
-const save = () => {
-  formRef.value.validate((valid) => {
-    if (valid) {
-      data.form.id ? update() : add()
-    }
-  })
-}
-
-const changePage = (pageNum) => {
-  data.pageNum = pageNum
-  load()
-}
-
-const dele = (id) => {
-  ElMessageBox.confirm('删除数据后无法恢复，您确认删除吗？', '删除确认', { type: 'warning' }).then(res => {
-    request.delete('/orders/deleteById/' + id).then(res => {
-      if (res.code === '200') {
-        ElMessage.success('删除成功')
-        load()
-      } else {
-        ElMessage.error(res.msg)
-      }
-    })
-  }).catch(res => {})
-}
-
-const reset = () => {
-  data.orderNo = null
-  load()
 }
 
 const loadSupplier = () => {
@@ -190,4 +165,111 @@ const loadSupplier = () => {
 
 load()
 loadSupplier()
+
+const reset = () => {
+  data.orderNo = ''
+  data.name = ''
+  load()
+}
+
+const handleAdd = () => {
+  data.formVisible = true
+  data.form = {}
+}
+
+const add = () => {
+  // formRef 是表单的引用
+  formRef.value.validate((valid) => {
+    if (valid) {   // 验证通过的情况下
+      request.post('/orders/add', data.form).then(res => {
+        if (res.code === '200') {
+          data.formVisible = false
+          ElMessage.success('新增成功')
+          load()
+        } else {
+          ElMessage.error(res.msg)
+        }
+      })
+    }
+  })
+}
+
+const handleEdit = (row) => {
+  data.form = JSON.parse(JSON.stringify(row))  // 深度拷贝数据
+  data.formVisible = true
+}
+
+const update = () => {
+  // formRef 是表单的引用
+  formRef.value.validate((valid) => {
+    if (valid) {   // 验证通过的情况下
+      request.put('/orders/update', data.form).then(res => {
+        if (res.code === '200') {
+          data.formVisible = false
+          ElMessage.success('修改成功')
+          load()
+        } else {
+          ElMessage.error(res.msg)
+        }
+      })
+    }
+  })
+}
+
+const save = () => {
+  data.form.id ? update() : add()
+}
+
+const del = (id) => {
+  ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', { type: 'warning' }).then(res => {
+    request.delete('/orders/deleteById/' + id).then(res => {
+      if (res.code === '200') {
+        ElMessage.success('删除成功')
+        load()
+      } else {
+        ElMessage.error(res.msg)
+      }
+    })
+  }).catch(err => {})
+}
+
+const handleSelectionChange = (rows) => {  // rows 就是实际选择的数组
+  data.rows = rows
+  data.ids = data.rows.map(v => v.id) // map可以把对象的数组 转换成一个纯数字的数组
+}
+
+const deleteBatch = () => {
+  if (data.rows.length === 0) {
+    ElMessage.warning('请选择数据')
+    return
+  }
+  ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', { type: 'warning' }).then(res => {
+    request.delete('/orders/deleteBatch', { data: data.rows }).then(res => {
+      if (res.code === '200') {
+        ElMessage.success('批量删除成功')
+        load()
+      } else {
+        ElMessage.error(res.msg)
+      }
+    })
+  }).catch(err => {})
+}
+
+const exportData = () => {
+  let idsStr = data.ids.join(",")  // 把数组转换成  字符串  [1,2,3]  ->  "1,2,3"
+  let url = `http://localhost:8080/orders/export?orderNo=${data.orderNo === null ? '' : data.orderNo}`
+      + `&name=${data.name === null ? '' : data.name}`
+      + `&ids=${idsStr}`
+      + `&token=${data.user.name}`
+  window.open(url)
+}
+
+const handleImportSuccess = (res) => {
+  if (res.code === '200') {
+    ElMessage.success('批量导入数据成功')
+    load()
+  } else {
+    ElMessage.error(res.msg)
+  }
+}
 </script>

@@ -1,6 +1,5 @@
 package com.example.service;
 
-import cn.hutool.core.date.DateUtil;
 import com.example.entity.Orders;
 import com.example.mapper.OrdersMapper;
 import com.github.pagehelper.PageHelper;
@@ -8,7 +7,6 @@ import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -18,7 +16,6 @@ public class OrdersService {
     private OrdersMapper ordersMapper;
 
     public void add(Orders orders) {
-        orders.setOrderNo(DateUtil.format(new Date(), "yyyyMMddHHmmss"));
         ordersMapper.insert(orders);
     }
 
@@ -34,6 +31,12 @@ public class OrdersService {
 
     public void deleteById(Integer id) {
         ordersMapper.deleteById(id);
+    }
+
+    public void deleteBatch(List<Orders> list) {
+        for (Orders orders : list) {
+            ordersMapper.deleteById(orders.getId());
+        }
     }
 
     public List<Orders> selectAll(Orders orders) {

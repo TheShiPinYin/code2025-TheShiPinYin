@@ -5,8 +5,11 @@ import com.example.entity.Category;
 import com.example.service.CategoryService;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -34,6 +37,12 @@ public class CategoryController {
         return Result.success();
     }
 
+    @DeleteMapping("/deleteBatch")
+    public Result deleteBatch(@RequestBody List<Category> list) {
+        categoryService.deleteBatch(list);
+        return Result.success();
+    }
+
     @GetMapping("/selectAll")
     public Result selectAll(Category category) {
         List<Category> list = categoryService.selectAll(category);
@@ -46,5 +55,28 @@ public class CategoryController {
                              Category category) {
         PageInfo<Category> info = categoryService.selectPage(pageNum, pageSize, category);
         return Result.success(info);
+    }
+
+    @GetMapping("/export")
+    public void exportData(Category category, HttpServletResponse response) {
+        try {
+            categoryService.exportData(category, response);
+        } catch (IOException e) {
+            // 可以在这里添加日志记录，比如使用 slf4j
+            e.printStackTrace();
+            // 这里可以返回错误响应给前端，不过由于是 void 方法，需要调整设计
+        }
+    }
+
+    @PostMapping("/import")
+    public Result importData(@RequestPart("file") MultipartFile file) {
+        try {
+            categoryService.importData(file);
+            return Result.success();
+        } catch (IOException e) {
+            // 可以在这里添加日志记录，比如使用 slf4j
+            e.printStackTrace();
+            return Result.error("导入数据失败: " + e.getMessage());
+        }
     }
 }

@@ -12,7 +12,6 @@ public interface SupplierMapper {
 
     List<Supplier> selectAll(Supplier supplier);
 
-
     void updateById(Supplier supplier);
 
     @Delete("delete from supplier where id = #{id}")

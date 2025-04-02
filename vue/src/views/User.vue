@@ -9,7 +9,7 @@
 
     <div class="card" style="margin-bottom: 5px">
       <el-button type="primary" @click="handleAdd">新 增</el-button>
-      <el-button type="danger" @click="deleteBatch">批量删除</el-button>
+      <el-button type="danger" @click="deleteBatch" :disabled="selectedRows.length === 0">批量删除</el-button>
       <el-button type="info" @click="exportData">批量导出</el-button>
       <el-upload
           style="display: inline-block; margin-left: 10px"
@@ -56,7 +56,7 @@
       />
     </div>
 
-    <el-dialog title="普通用户信息" v-model="data.formVisible" width="30%" destroy-on-close>
+    <el-dialog title="会员信息" v-model="data.formVisible" width="30%" destroy-on-close>
       <el-form ref="formRef" :model="data.form" :rules="data.rules" label-width="80px" style="padding: 20px 30px 10px 0">
         <el-form-item prop="username" label="账号">
           <el-input v-model="data.form.username" autocomplete="off" placeholder="请输入账号"/>
@@ -126,6 +126,8 @@ const data = reactive({
 })
 
 const formRef = ref()
+
+const selectedRows = ref([])
 
 const load = () => {
   request.get('/user/selectPage', {

@@ -1,12 +1,22 @@
 package com.example.controller;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.example.common.Result;
 import com.example.entity.Orders;
 import com.example.service.OrdersService;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -34,6 +44,12 @@ public class OrdersController {
         return Result.success();
     }
 
+    @DeleteMapping("/deleteBatch")
+    public Result deleteBatch(@RequestBody List<Orders> list) {
+        ordersService.deleteBatch(list);
+        return Result.success();
+    }
+
     @GetMapping("/selectAll")
     public Result selectAll(Orders orders) {
         List<Orders> list = ordersService.selectAll(orders);
@@ -46,5 +62,48 @@ public class OrdersController {
                              Orders orders) {
         PageInfo<Orders> info = ordersService.selectPage(pageNum, pageSize, orders);
         return Result.success(info);
+    }
+
+    @GetMapping("/export")
+    public void exportData(Orders orders, HttpServletResponse response) throws Exception {
+        String ids = orders.getIds();
+        if (StrUtil.isNotBlank(ids)) {
+            String[] idArr = ids.split(",");
+            orders.setIdsarr(idArr);
+        }
+        List<Orders> list = ordersService.selectAll(orders);
+        ExcelWriter writer = ExcelUtil.getWriter(true);
+        writer.addHeaderAlias("orderNo", "订单编号");
+        writer.addHeaderAlias("name", "商品名称");
+        writer.addHeaderAlias("count", "商品数量");
+        writer.addHeaderAlias("total", "订单总价");
+        writer.addHeaderAlias("supplierName", "供货商");
+        writer.addHeaderAlias("time", "订单时间");
+        writer.setOnlyAlias(true);
+        writer.write(list);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        String fileName = URLEncoder.encode("订单信息", StandardCharsets.UTF_8);
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
+        ServletOutputStream os = response.getOutputStream();
+        writer.flush(os);
+        writer.close();
+        os.close();
+    }
+
+    @PostMapping("/import")
+    public Result importData(MultipartFile file) throws Exception {
+        InputStream inputStream = file.getInputStream();
+        ExcelReader reader = ExcelUtil.getReader(inputStream);
+        reader.addHeaderAlias("订单编号", "orderNo");
+        reader.addHeaderAlias("商品名称", "name");
+        reader.addHeaderAlias("商品数量", "count");
+        reader.addHeaderAlias("订单总价", "total");
+        reader.addHeaderAlias("供货商", "supplierName");
+        reader.addHeaderAlias("订单时间", "time");
+        List<Orders> list = reader.readAll(Orders.class);
+        for (Orders orders : list) {
+            ordersService.add(orders);
+        }
+        return Result.success();
     }
 }

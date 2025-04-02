@@ -33,6 +33,12 @@ public class SupplierService {
         supplierMapper.deleteById(id);
     }
 
+    public void deleteBatch(List<Supplier> list) {
+        for (Supplier supplier : list) {
+            supplierMapper.deleteById(supplier.getId());
+        }
+    }
+
     public List<Supplier> selectAll(Supplier supplier) {
         return supplierMapper.selectAll(supplier);
     }

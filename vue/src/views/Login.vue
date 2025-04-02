@@ -71,7 +71,7 @@ const login = () => {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  background-image: url("@/assets/imgs/bg.jpg");
+  background-image: url("@/assets/imgs/bg.png");
   background-size: cover;
 }
 </style>
