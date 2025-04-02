@@ -12,6 +12,7 @@ const router = createRouter({
         {path: "person", meta:{ name: '个人中心' }, component: () => import("../views/Person.vue")},
         {path: "updatePassword", meta:{ name: '修改密码' }, component: () => import("../views/UpdatePassword.vue")},
         {path: "notice", meta:{ name: '系统公告' }, component: () => import("../views/Notice.vue")},
+        {path: "message", meta:{ name: '留言管理' }, component: () => import("../views/Message.vue")},
         { path: 'category', name: '分类管理', component: () => import('../views/Category.vue')},
         { path: 'goods', name: '商品管理', component: () => import('../views/Goods.vue')},
         { path: 'supplier', name: '供货商管理', component: () => import('../views/Supplier.vue')},

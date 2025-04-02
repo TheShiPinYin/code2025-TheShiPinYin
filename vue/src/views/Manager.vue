@@ -41,6 +41,7 @@
             <el-icon><Monitor /></el-icon><span>信息管理</span>
           </template>
             <el-menu-item index="/manager/notice"><el-icon><ChatSquare /></el-icon><span>系统公告</span></el-menu-item>
+            <el-menu-item index="/manager/message"><el-icon><ChatDotRound /></el-icon><span>留言管理</span></el-menu-item>
             <el-menu-item index="/manager/Category"><el-icon><DocumentRemove /></el-icon><span>分类管理</span></el-menu-item>
             <el-menu-item index="/manager/goods"><el-icon><Goods /></el-icon><span>商品管理</span></el-menu-item>
             <el-menu-item index="/manager/supplier" v-if="data.user.role === 'ADMIN'"><el-icon><User /></el-icon><span>供货商管理</span></el-menu-item>

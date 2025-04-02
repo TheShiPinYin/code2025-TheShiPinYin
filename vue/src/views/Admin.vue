@@ -12,7 +12,7 @@
       <el-button type="info" @click="exportData">批量导出</el-button>
       <el-upload
           style="display: inline-block; margin-left: 10px"
-          action="http://localhost:9999/admin/import"
+          action="http://localhost:8080/admin/import"
           :show-file-list="false"
           :on-success="handleImportSuccess"
       >
@@ -24,7 +24,7 @@
       <el-table :data="data.tableData" style="width: 100%" @selection-change="handleSelectionChange"
                 :header-cell-style="{ color: '#333', backgroundColor: '#eaf4ff' }">
         <el-table-column type="selection" width="55" />
-        <el-table-column label="头像" width="100">
+        <el-table-column label="头像" width="100" >
           <template #default="scope">
             <el-image v-if="scope.row.avatar" :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]" :preview-teleported="true"
                       style="width: 40px; height: 40px; border-radius: 50%; display: block" />
@@ -57,20 +57,20 @@
     <el-dialog title="管理员信息" v-model="data.formVisible" width="30%" destroy-on-close>
       <el-form ref="formRef" :model="data.form" :rules="data.rules" label-width="80px" style="padding: 20px 30px 10px 0">
         <el-form-item prop="username" label="账号">
-          <el-input v-model="data.form.username" autocomplete="off" placeholder="请输入账号" />
+          <el-input v-model="data.form.username" autocomplete="off" placeholder="请输入账号"/>
         </el-form-item>
         <el-form-item prop="name" label="名称">
-          <el-input v-model="data.form.name" autocomplete="off" placeholder="请输入名称" />
+          <el-input v-model="data.form.name" autocomplete="off" placeholder="请输入名称"/>
         </el-form-item>
         <el-form-item prop="phone" label="电话">
-          <el-input v-model="data.form.phone" autocomplete="off" placeholder="请输入电话" />
+          <el-input v-model="data.form.phone" autocomplete="off" placeholder="请输入电话"/>
         </el-form-item>
         <el-form-item prop="email" label="邮箱">
-          <el-input v-model="data.form.email" autocomplete="off" placeholder="请输入邮箱" />
+          <el-input v-model="data.form.email" autocomplete="off" placeholder="请输入邮箱"/>
         </el-form-item>
         <el-form-item prop="avatar" label="头像">
           <el-upload
-              action="http://localhost:9999/files/upload"
+              action="http://localhost:8080/files/upload"
               :headers="{ token: data.user.token }"
               :on-success="handleFileSuccess"
               list-type="picture"
@@ -97,8 +97,8 @@ import {ElMessage, ElMessageBox} from "element-plus";
 
 const data = reactive({
   user: JSON.parse(localStorage.getItem('code_user') || '{}'),
-  username: null,
-  name: null,
+  username: '',
+  name: '',
   pageNum: 1,
   pageSize: 5,
   total: 0,
@@ -145,8 +145,8 @@ const load = () => {
 load()
 
 const reset = () => {
-  data.username = null
-  data.name = null
+  data.username = ''
+  data.name = ''
   load()
 }
 
@@ -213,7 +213,7 @@ const del = (id) => {
 
 const handleSelectionChange = (rows) => {  // rows 就是实际选择的数组
   data.rows = rows
-  data.ids = data.rows.map(v => v.id)  // map可以把对象的数组 转换成一个纯数字的数组  [1,2,3]
+  data.ids = data.rows.map(v => v.id) // map可以把对象的数组 转换成一个纯数字的数组
 }
 
 const deleteBatch = () => {
@@ -235,10 +235,10 @@ const deleteBatch = () => {
 
 const exportData = () => {
   let idsStr = data.ids.join(",")  // 把数组转换成  字符串  [1,2,3]  ->  "1,2,3"
-  let url = `http://localhost:9999/admin/export?username=${data.username === null ? '' : data.username}`
-  + `&name=${data.name === null ? '' : data.name}`
-  + `&ids=${idsStr}`
-  + `&token=${data.user.token}`
+  let url = `http://localhost:8080/admin/export?username=${data.username === null ? '' : data.username}`
+      + `&name=${data.name === null ? '' : data.name}`
+      + `&ids=${idsStr}`
+      + `&token=${data.user.name}`
   window.open(url)
 }
 
@@ -255,4 +255,3 @@ const handleFileSuccess = (res) => {
   data.form.avatar = res.data
 }
 </script>
-
