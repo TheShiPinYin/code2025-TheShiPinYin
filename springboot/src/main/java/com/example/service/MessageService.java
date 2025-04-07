@@ -1,8 +1,6 @@
 package com.example.service;
 
-import cn.hutool.core.date.DateUtil;
-import com.example.entity.Message;
-import com.example.entity.Notice;
+import com.example.model.entity.Message;
 import com.example.mapper.MessageMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

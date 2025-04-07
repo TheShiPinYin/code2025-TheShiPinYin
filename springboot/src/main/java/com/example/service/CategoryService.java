@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.entity.Category;
+import com.example.model.entity.Category;
 import com.example.mapper.CategoryMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

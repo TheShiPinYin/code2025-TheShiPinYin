@@ -1,6 +1,6 @@
 package com.example.mapper;
 
-import com.example.entity.Orders;
+import com.example.model.entity.Orders;
 import org.apache.ibatis.annotations.Delete;
 
 import java.util.List;

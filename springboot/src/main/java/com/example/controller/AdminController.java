@@ -1,11 +1,10 @@
 package com.example.controller;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.example.common.Result;
-import com.example.entity.Admin;
+import com.example.model.entity.Admin;
 import com.example.service.AdminService;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
@@ -45,8 +44,8 @@ public class AdminController {
     }
 
     @DeleteMapping("/deleteBatch")
-    public Result deleteBatch(@RequestBody List<Admin> list) {  //  @RequestBody 接收前端传来的 json数组
-        adminService.deleteBatch(list);
+    public Result deleteBatch(@RequestBody List<Integer> ids) {  //  @RequestBody 接收前端传来的 json数组
+        adminService.deleteBatch(ids);
         return Result.success();
     }
 
@@ -64,7 +63,7 @@ public class AdminController {
     @GetMapping("/selectPage")
     public Result selectPage(@RequestParam(defaultValue = "1") Integer pageNum,
                              @RequestParam(defaultValue = "10") Integer pageSize,
-                             Admin admin) {
+                              admin) {
         PageInfo<Admin> pageInfo = adminService.selectPage(pageNum, pageSize, admin);
         return Result.success(pageInfo);  // 返回的是分页的对象
     }
@@ -73,15 +72,10 @@ public class AdminController {
      * 数据导出
      * ids: 1,2,3
      */
-    @GetMapping("/export")
-    public void exportData(Admin admin, HttpServletResponse response) throws Exception {
-        String ids = admin.getIds();
-        if (StrUtil.isNotBlank(ids)) {
-            String[] idArr = ids.split(",");
-            admin.setIdsarr(idArr);
-        }
+    @PostMapping("/export")
+    public void exportData(@RequestBody List<Integer> ids, HttpServletResponse response) throws Exception {
         // 1. 拿到所有数据
-        List<Admin> list = adminService.selectAll(admin);
+        List<Admin> list = adminService.selectAll(ids);
         // 2. 构建Writer对象
         ExcelWriter writer = ExcelUtil.getWriter(true);
         // 3. 设置中文表头

@@ -1,6 +1,6 @@
 package com.example.mapper;
 
-import com.example.entity.Category;
+import com.example.model.entity.Category;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

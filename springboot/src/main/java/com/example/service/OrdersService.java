@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.entity.Orders;
+import com.example.model.entity.Orders;
 import com.example.mapper.OrdersMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

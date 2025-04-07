@@ -1,9 +1,8 @@
 package com.example.service;
 
 import cn.hutool.core.util.StrUtil;
-import com.example.entity.Account;
-import com.example.entity.Admin;
-import com.example.entity.User;
+import com.example.model.entity.Account;
+import com.example.model.entity.Admin;
 import com.example.exception.CustomerException;
 import com.example.mapper.AdminMapper;
 import com.example.utils.TokenUtils;
@@ -11,9 +10,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.events.Event;
 
-import java.lang.invoke.VarHandle;
 import java.util.List;
 
 @Service
@@ -44,9 +41,14 @@ public class AdminService {
         adminMapper.deleteById(id);
     }
 
-    public void deleteBatch(List<Admin> list) {
-        for (Admin admin : list) {
-            this.deleteById(admin.getId());
+    public void deleteBatch(List<Integer> ids) {
+        // 先判断ids是否为空
+        if (ids == null || ids.size() == 0) {
+            throw new CustomerException("500", "请选择要删除的用户");
+        }
+        // 删除
+        for (Integer id : ids) {
+            adminMapper.deleteById(id);
         }
     }
 
@@ -54,8 +56,8 @@ public class AdminService {
         return adminMapper.selectById(id);
     }
 
-    public List<Admin> selectAll(Admin admin) {
-        return adminMapper.selectAll(admin);
+    public List<Admin> selectAll(String username, String name, List<Integer> ids) {
+        return adminMapper.selectAll(username, name, ids);
     }
 
     public PageInfo<Admin> selectPage(Integer pageNum, Integer pageSize, Admin admin) {

@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.SupplierMapper">
 
-    <select id="selectAll" resultType="com.example.entity.Supplier">
+    <select id="selectAll" resultType="com.example.model.entity.Supplier">
         select * from `supplier`
         <where>
             <if test="name != null">and name like concat('%', #{name}, '%')</if>
@@ -12,7 +12,7 @@
         order by id desc
     </select>
 
-    <update id="updateById" parameterType="com.example.entity.Supplier">
+    <update id="updateById" parameterType="com.example.model.entity.Supplier">
         update supplier
         <set>
             <if test="name != null">

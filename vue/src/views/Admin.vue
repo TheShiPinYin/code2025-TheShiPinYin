@@ -94,6 +94,7 @@ import { reactive, ref } from "vue";
 import {Search} from "@element-plus/icons-vue";
 import request from "@/utils/request.js";
 import {ElMessage, ElMessageBox} from "element-plus";
+import {adminApi} from "@/api/adminApi.js";
 
 const data = reactive({
   user: JSON.parse(localStorage.getItem('code_user') || '{}'),
@@ -125,22 +126,30 @@ const data = reactive({
 
 const formRef = ref()
 
-const load = () => {
-  request.get('/admin/selectPage', {
-    params: {
-      pageNum: data.pageNum,
-      pageSize: data.pageSize,
-      username: data.username,
-      name: data.name
-    }
-  }).then(res => {
-    if (res.code === '200') {
-      data.tableData = res.data.list
-      data.total = res.data.total
-    } else {
-      ElMessage.error(res.msg)
-    }
+const load = async () => {
+  
+  // adminApi示例：
+  const { data: admins } = await adminApi.getAdmins({
+    username: '123',
+    name: '456',
+    ids: [1, 2, 3]
   })
+  
+  // request.get('/admin/selectPage', {
+  //   params: {
+  //     pageNum: data.pageNum,
+  //     pageSize: data.pageSize,
+  //     username: data.username,
+  //     name: data.name
+  //   }
+  // }).then(res => {
+  //   if (res.code === '200') {
+  //     data.tableData = res.data.list
+  //     data.total = res.data.total
+  //   } else {
+  //     ElMessage.error(res.msg)
+  //   }
+  // })
 }
 load()
 

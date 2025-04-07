@@ -1,7 +1,6 @@
 package com.example.mapper;
 
-import com.example.entity.Message;
-import com.example.entity.Notice;
+import com.example.model.entity.Message;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

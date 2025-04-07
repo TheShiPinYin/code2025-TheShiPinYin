@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.entity.Supplier;
+import com.example.model.entity.Supplier;
 import com.example.mapper.SupplierMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

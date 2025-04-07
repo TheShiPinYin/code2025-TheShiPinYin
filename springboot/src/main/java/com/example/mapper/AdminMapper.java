@@ -1,6 +1,6 @@
 package com.example.mapper;
 
-import com.example.entity.Admin;
+import com.example.model.entity.Admin;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AdminMapper {
 
-    List<Admin> selectAll(Admin admin);
+    List<Admin> selectAll(String username, String name, List<Integer> idsArr);
 
     void insert(Admin admin);
 

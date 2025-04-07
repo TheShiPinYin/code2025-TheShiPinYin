@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mapper.GoodsMapper">
 
     <!-- 查询所有商品信息，支持根据商品名称模糊查询 -->
-    <select id="selectAll" resultType="com.example.entity.Goods">
+    <select id="selectAll" resultType="com.example.model.entity.Goods">
         select goods.*, category.name as categoryName, supplier.name as supplierName from goods
         left join category on goods.category_id = category.id
         left join supplier on goods.supplier_id = supplier.id
@@ -24,18 +24,18 @@
         order by id desc
     </select>
 
-    <select id="selectPage" resultType="com.example.entity.Goods">
+    <select id="selectPage" resultType="com.example.model.entity.Goods">
         # 你后面自己补吧，没用过这个page helper
     </select>
 
     <!-- 新增商品信息 -->
-    <insert id="insert" parameterType="com.example.entity.Goods">
+    <insert id="insert" parameterType="com.example.model.entity.Goods">
         insert into goods (name, price, img, supplier_id, category_id, count)
         values (#{name}, #{price}, #{img}, #{supplierId}, #{categoryId}, #{count})
     </insert>
 
     <!-- 根据商品 ID 更新商品信息 -->
-    <update id="updateById" parameterType="com.example.entity.Goods">
+    <update id="updateById" parameterType="com.example.model.entity.Goods">
         update goods
         <set>
             <if test="name != null">

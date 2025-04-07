@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.entity.Notice;
+import com.example.model.entity.Notice;
 import com.example.service.NoticeService;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;

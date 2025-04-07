@@ -1,14 +1,14 @@
-package com.example.entity;
+package com.example.model.entity;
 
 import lombok.Data;
 
 /**
- * 留言信息
+ * 系统公告信息
  */
 @Data
-public class Message {
+public class Notice {
     private Integer id;
+    private String title;
     private String content;
-    private String username;
     private String time;
 }

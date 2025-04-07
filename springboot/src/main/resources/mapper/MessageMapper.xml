@@ -4,12 +4,12 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.MessageMapper">
 
-    <insert id="add" parameterType="com.example.entity.Message">
+    <insert id="add" parameterType="com.example.model.entity.Message">
         INSERT INTO `message` (content, username, time)
         VALUES (#{content}, #{username}, #{time})
     </insert>
 
-    <update id="update" parameterType="com.example.entity.Message">
+    <update id="update" parameterType="com.example.model.entity.Message">
         UPDATE `message`
         SET content = #{content},
         username = #{username},
@@ -21,7 +21,7 @@
         DELETE FROM `message` WHERE id = #{id}
     </delete>
 
-    <select id="selectByUsername" resultType="com.example.entity.Message">
+    <select id="selectByUsername" resultType="com.example.model.entity.Message">
         SELECT * FROM `message`
         <where>
             <if test="username != null and username != ''">
@@ -31,7 +31,7 @@
         ORDER BY id DESC
     </select>
 
-    <select id="selectAll" resultType="com.example.entity.Message">
+    <select id="selectAll" resultType="com.example.model.entity.Message">
         select * from `message`
         <where>
             <if test="username != null and username != ''">and username like concat('%', #{username}, '%')</if>  <!-- 相当于 name like '%1%' -->

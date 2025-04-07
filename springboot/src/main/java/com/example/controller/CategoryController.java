@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.common.Result;
-import com.example.entity.Category;
+import com.example.model.entity.Category;
 import com.example.service.CategoryService;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;

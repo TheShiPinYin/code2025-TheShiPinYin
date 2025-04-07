@@ -1,7 +1,6 @@
 package com.example.mapper;
 
-import com.example.entity.Category;
-import com.example.entity.Goods;
+import com.example.model.entity.Goods;
 
 import java.util.List;
 

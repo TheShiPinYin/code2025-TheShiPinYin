@@ -1,8 +1,7 @@
 package com.example.mapper;
 
-import com.example.entity.Notice;
+import com.example.model.entity.Notice;
 import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 

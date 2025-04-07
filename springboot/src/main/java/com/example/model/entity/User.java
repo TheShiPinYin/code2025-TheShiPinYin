@@ -1,9 +1,12 @@
-package com.example.entity;
+package com.example.model.entity;
 
 import lombok.Data;
 
+/**
+ * 普通用户信息
+ */
 @Data
-public class Account {
+public class User extends Account {
     private Integer id;
     private String username;
     private String password;
@@ -13,6 +16,9 @@ public class Account {
     private String role;
     private String token;
     private String avatar;
-    private String newPassword;
-    private String new2Password;
+
+    // 非数据库字段
+    private String ids;
+    private String[] idsarr;
+    
 }

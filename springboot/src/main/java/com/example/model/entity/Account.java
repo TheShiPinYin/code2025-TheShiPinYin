@@ -1,12 +1,9 @@
-package com.example.entity;
+package com.example.model.entity;
 
 import lombok.Data;
 
-/**
- * 管理员信息
- */
 @Data
-public class Admin extends Account {
+public class Account {
     private Integer id;
     private String username;
     private String password;
@@ -16,9 +13,6 @@ public class Admin extends Account {
     private String role;
     private String token;
     private String avatar;
-
-    // 非数据库字段
-    private String ids;
-    private String[] idsarr;
-
+    private String newPassword;
+    private String new2Password;
 }

@@ -1,7 +1,7 @@
 package com.example.service;
 
 import cn.hutool.core.date.DateUtil;
-import com.example.entity.Notice;
+import com.example.model.entity.Notice;
 import com.example.mapper.NoticeMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

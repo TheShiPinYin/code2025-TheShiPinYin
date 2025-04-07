@@ -1,6 +1,6 @@
 package com.example.mapper;
 
-import com.example.entity.Supplier;
+import com.example.model.entity.Supplier;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 
