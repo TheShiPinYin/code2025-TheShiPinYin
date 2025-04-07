@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class GoodsService {
     @Resource
-    private GoodsMapper goodsMapper;
+    GoodsMapper goodsMapper;
 
     public void add(Goods goods) {
         goodsMapper.insert(goods);
@@ -21,7 +21,7 @@ public class GoodsService {
 
     public PageInfo<Goods> selectPage(Integer pageNum, Integer pageSize, Category category) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Goods> list = goodsMapper.selectAll(category);
+        List<Goods> list = goodsMapper.selectPage(); // 怎么在乱用，select page 怎么回用一个叫select all的方法呢，这都不是一个意思 乱搞
         return PageInfo.of(list);
     }
 
@@ -35,7 +35,13 @@ public class GoodsService {
 
     public void deleteBatch(List<Goods> goodsList) {
         for (Goods goods : goodsList) {
-            goodsMapper.deleteById(goods.getId());
+            this.deleteById(goods.getId());
         }
     }
+
+
+    public List<Goods> selectAll() {
+        return goodsMapper.selectAll();
+    }
+
 }

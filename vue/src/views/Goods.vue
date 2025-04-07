@@ -8,7 +8,7 @@
 
     <div class="card" style="margin-bottom: 5px">
       <el-button type="primary" @click="handleAdd">新 增</el-button>
-      <el-button type="danger" @click="deleteBatch" :disabled="selectedRows.length === 0">批量删除</el-button>
+      <el-button type="danger" @click="deleteBatch">批量删除</el-button>
       <el-button type="info" @click="exportData">批量导出</el-button>
       <el-upload
           style="display: inline-block; margin-left: 10px"
@@ -129,8 +129,6 @@ const rules = reactive({
 
 const formRef = ref()
 
-const selectedRows = ref([])
-
 const handleAdd = () => {
   data.form = {}
   data.formVisible = true
@@ -200,7 +198,7 @@ const save = () => {
 
 const dele = (id) => {
   ElMessageBox.confirm('删除数据后无法恢复，您确认删除吗？', '删除确认', { type: 'warning' }).then(res => {
-    request.delete('/goods/deleteById/' + id).then(res => {
+    request.delete('/goods/delete/' + id).then(res => {
       if (res.code === '200') {
         ElMessage.success('删除成功')
         load()

@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mapper.SupplierMapper">
 
     <select id="selectAll" resultType="com.example.entity.Supplier">
-        select * from supplier
+        select * from `supplier`
         <where>
             <if test="name != null">and name like concat('%', #{name}, '%')</if>
         </where>

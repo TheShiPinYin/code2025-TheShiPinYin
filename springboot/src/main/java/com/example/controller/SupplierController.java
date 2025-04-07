@@ -24,7 +24,7 @@ import java.util.List;
 public class SupplierController {
 
     @Resource
-    private SupplierService supplierService;
+    SupplierService supplierService;
 
     @PostMapping("/add")
     public Result add(@RequestBody Supplier supplier) {
@@ -38,7 +38,7 @@ public class SupplierController {
         return Result.success();
     }
 
-    @DeleteMapping("/deleteById/{id}")
+    @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable Integer id) {
         supplierService.deleteById(id);
         return Result.success();

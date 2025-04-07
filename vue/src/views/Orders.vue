@@ -154,7 +154,7 @@ const load = () => {
 }
 
 const loadSupplier = () => {
-  request.get('/supplier/selectAll').then(res => {
+  request.get('/orders/selectAll').then(res => {
     if (res.code === '200') {
       data.supplierData = res.data
     } else {

@@ -5,8 +5,7 @@
 <mapper namespace="com.example.mapper.OrdersMapper">
 
     <select id="selectAll" resultType="com.example.entity.Orders">
-        select orders.*, supplier.name as supplierName from orders
-        left join supplier on orders.supplier_id = supplier.id
+        select * from `orders`
         <where>
             <if test="orderNo != null">and order_no like concat('%', #{orderNo}, '%')</if>
             <if test="idsArr != null and idsArr.length > 0">

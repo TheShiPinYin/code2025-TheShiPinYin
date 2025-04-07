@@ -17,8 +17,15 @@
                     #{id}
                 </foreach>
             </if>
+            <if test="category != null">
+                and category.name = category
+            </if>
         </where>
         order by id desc
+    </select>
+
+    <select id="selectPage" resultType="com.example.entity.Goods">
+        # 你后面自己补吧，没用过这个page helper
     </select>
 
     <!-- 新增商品信息 -->
