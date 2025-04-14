@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.model.dto.LoginDto;
 import com.example.model.dto.UserDto;
 import com.example.model.dto.UserRequestDto;
@@ -40,7 +41,8 @@ public class UserController {
         if (dto.getRole() != null) {
             wrapper.eq(User::getRole, dto.getRole());
         }
-        List<User> users = userService.list(wrapper);
+        Page<User> page = new Page<>(dto.getPage(), dto.getSize());
+        List<User> users = userService.list(page, wrapper);
         return ResponseEntity.ok(users);
     }
     

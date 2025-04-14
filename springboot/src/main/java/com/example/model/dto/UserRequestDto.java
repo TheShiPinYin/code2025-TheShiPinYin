@@ -14,5 +14,6 @@ public class UserRequestDto {
     
     public List<Integer> ids;
     public Role role;
-    
+    public int page;
+    public int size;
 }
