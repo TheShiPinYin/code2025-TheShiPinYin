@@ -27,6 +27,6 @@ public class UserService extends ServiceImpl<UserMapper, User> implements IUserS
         if (!user.getPassword().equals(password)) {
             return "Incorrect password";
         }
-        return TokenUtils.createToken(user.getId().toString() + '-' + user.getRole(), user.getPassword());
+        return TokenUtils.createToken(user.getId().toString(), user.getPassword());
     }
 }
