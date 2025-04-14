@@ -1,12 +1,13 @@
 package com.example.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.model.entity.User;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-public interface UserMapper {
+public interface UserMapper extends BaseMapper<User> {
 
     List<User> selectAll(User user);
 

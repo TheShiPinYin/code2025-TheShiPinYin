@@ -2,6 +2,7 @@ package com.example.service;
 
 import cn.hutool.core.util.StrUtil;
 import com.example.model.entity.Account;
+import com.example.model.entity.Role;
 import com.example.model.entity.User;
 import com.example.exception.CustomerException;
 import com.example.mapper.UserMapper;
@@ -32,7 +33,7 @@ public class UserService {
         if (StrUtil.isBlank(user.getName())) {
             user.setName(user.getUsername());
         }
-        user.setRole("USER");
+        user.setRole(Role.USER);
         userMapper.insert(user);
     }
 
