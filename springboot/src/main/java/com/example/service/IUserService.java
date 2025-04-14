@@ -8,5 +8,8 @@ import com.example.model.entity.User;
  * @since 2025-04-11
  */
 public interface IUserService extends IService<User> {
+
+
+    String login(String username, String password);
     
 }

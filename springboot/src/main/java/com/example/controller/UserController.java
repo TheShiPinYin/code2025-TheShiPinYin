@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.model.dto.LoginDto;
 import com.example.model.dto.UserDto;
 import com.example.model.dto.UserRequestDto;
 import com.example.model.entity.User;
@@ -8,6 +9,7 @@ import com.example.service.impl.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +21,15 @@ public class UserController {
     
     @Resource
     private UserService userService;
+    
+    @PostMapping("login")
+    public ResponseEntity<String> login(@RequestBody LoginDto dto) {
+        String token = userService.login(dto.getUsername(), dto.getPassword());
+        if (token == null) {
+            return ResponseEntity.badRequest().body("登录失败");
+        }
+        return ResponseEntity.ok(token);
+    }
     
     @PostMapping("users")
     public ResponseEntity<?> getUsers(@RequestBody UserRequestDto dto) {
@@ -49,6 +60,15 @@ public class UserController {
             return ResponseEntity.internalServerError().body("");
         }
         return ResponseEntity.ok(user);
+    }
+    
+    @DeleteMapping("users")
+    public ResponseEntity<?> deleteUsers(@RequestBody List<Integer> ids) {
+        boolean removed = userService.removeBatchByIds(ids);
+        if (!removed) {
+            return ResponseEntity.internalServerError().body("");
+        }
+        return ResponseEntity.ok("");
     }
     
     

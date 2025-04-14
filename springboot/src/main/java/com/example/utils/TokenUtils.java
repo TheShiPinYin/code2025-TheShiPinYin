@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.model.entity.Account;
+import com.example.model.entity.User;
 import com.example.service.AdminService;
 import com.example.service.UserService;
 import jakarta.annotation.PostConstruct;
@@ -47,24 +47,18 @@ public class TokenUtils {
     /**
      * 获取当前登录的用户信息
      */
-    public static Account getCurrentUser() {
+    public static User getCurrentUser() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getHeader("token");
         if (StrUtil.isBlank(token)) {
             token = request.getParameter("token");
         }
         // 拿到token 的载荷数据
-        String audience = JWT.decode(token).getAudience().get(0);
+        String audience = JWT.decode(token).getAudience().getFirst();
         String[] split = audience.split("-");
         String userId = split[0];
-        String role = split[1];
         // 根据token解析出来的userId去对应的表查询用户信息
-        if ("ADMIN".equals(role)) {
-            return staticAdminService.selectById(userId);
-        } else if ("USER".equals(role)) {
-            return staticUserService.selectById(userId);
-        }
-        return null;
+        return staticUserService.selectById(userId);
     }
 
 }
